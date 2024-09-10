@@ -1,46 +1,39 @@
 import { useState } from "react";
-import { postData } from "./services/contacts";
-import SearchUserByEmail from "./components/SearchUserByEmail";
+import { updateUser } from "../services/contacts";
 
-function App() {
-  const [formData, setFormData] = useState({
-    firstname: "",
-    lastname: "",
-    email: "",
-    phone: "",
-  });
+const Modal = ({ userData, onClose, onDelete }) => {
+  const [editData, setEditData] = useState(userData.properties);
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setEditData({
+      ...editData,
       [name]: value,
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setMessage("");
-    setIsError(false);
+  const handleUpdate = async () => {
+    const { hs_object_id, createdate, lastmodifieddate, ...filteredData } =
+      editData;
     try {
-      await postData({ properties: formData });
-      setMessage("Contact created successfully");
+      await updateUser(userData.id, { properties: filteredData });
+      setMessage("User updated successfully");
       setIsError(false);
+      setTimeout(() => {
+        onClose();
+      }, 1000);
     } catch (error) {
-      setMessage(error.response?.data?.error || "Error submitting form");
       setIsError(true);
-      console.error("Error submitting form:", error);
+      setMessage(error.response.data.error || "Error updating user");
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-96">
-        <h2 className="text-2xl font-bold mb-6 text-center">Contact Form</h2>
-
-        <SearchUserByEmail />
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+        <h2 className="text-xl font-bold mb-4">User Information</h2>
 
         {message && (
           <div
@@ -54,7 +47,7 @@ function App() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4 mt-6">
+        <div className="space-y-4">
           <div>
             <label
               className="block text-sm font-medium text-gray-700"
@@ -66,13 +59,11 @@ function App() {
               type="text"
               id="firstname"
               name="firstname"
-              value={formData.firstname}
+              value={editData.firstname}
               onChange={handleChange}
               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-              required
             />
           </div>
-
           <div>
             <label
               className="block text-sm font-medium text-gray-700"
@@ -84,13 +75,11 @@ function App() {
               type="text"
               id="lastname"
               name="lastname"
-              value={formData.lastname}
+              value={editData.lastname}
               onChange={handleChange}
               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-              required
             />
           </div>
-
           <div>
             <label
               className="block text-sm font-medium text-gray-700"
@@ -102,13 +91,11 @@ function App() {
               type="email"
               id="email"
               name="email"
-              value={formData.email}
+              value={editData.email}
               onChange={handleChange}
               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-              required
             />
           </div>
-
           <div>
             <label
               className="block text-sm font-medium text-gray-700"
@@ -120,23 +107,36 @@ function App() {
               type="tel"
               id="phone"
               name="phone"
-              value={formData.phone}
+              value={editData.phone}
               onChange={handleChange}
               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-              required
             />
           </div>
+        </div>
 
+        <div className="flex justify-between mt-6">
           <button
-            type="submit"
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md"
+            onClick={handleUpdate}
+            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md"
           >
-            Submit
+            Update
           </button>
-        </form>
+          <button
+            onClick={onDelete}
+            className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md"
+          >
+            Delete
+          </button>
+          <button
+            onClick={onClose}
+            className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-md"
+          >
+            Close
+          </button>
+        </div>
       </div>
     </div>
   );
-}
+};
 
-export default App;
+export default Modal;

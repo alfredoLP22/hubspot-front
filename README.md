@@ -1,8 +1,21 @@
-# React + Vite
+# React Vite Project
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este es un proyecto de React utilizando Vite como herramienta de construcción.
 
-Currently, two official plugins are available:
+## Requisitos
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Asegúrate de tener instalado [Node.js](https://nodejs.org/) en tu máquina.
+
+## Configuración del Proyecto
+
+1. **Clona el Repositorio**
+
+   ```bash
+   git clone https://github.com/alfredoLP22/hubspot-api-integration.git
+   cd nombre-del-repositorio
+   Instala las Dependencias
+   ```
+
+2. npm install O si prefieres usar yarn: yarn install
+
+3. Configura las Variables de Entorno Crea un archivo .env en la raíz del proyecto y añade las variables de entorno necesarias. Por ejemplo: VITE_API_URL=http://localhost:3001/api/contacts Inicia el Servidor de Desarrollo npm run dev O si usas yarn: yarn dev
